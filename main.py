@@ -126,3 +126,32 @@ vowel = {
     'JO' : 'ㅛ',
     'J@' : 'ㅒ',
 }
+
+# 포만코드 변환
+def get_phoman(text):
+    char_lst = []
+    for char in list(text):    
+        if char in phoman.keys():
+            char_lst.append(phoman[char])
+            
+    return char_lst
+
+def get_hangul(text):
+    hangul_lst = []
+
+    for pro in get_phoman(text):
+        
+        # 자음부 
+        if pro in consonant.keys():
+            hangul_lst.append(consonant[pro])
+            
+        # 모음부
+        if pro in vowel.keys():
+            hangul_lst.append(vowel[pro])
+
+    return hangul_lst
+
+if __name__ == "__main__":
+    text = 'ɔɪl'
+
+    print(get_hangul(text=text))
