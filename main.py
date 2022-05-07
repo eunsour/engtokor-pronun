@@ -1,7 +1,7 @@
 # 포만코드 대조표
 
 phoman = {
-    'ː' : ':',
+#     'ː' : ':',
     'n' : 'N',
     'b' : 'B',
     'z' : 'Z',
@@ -10,7 +10,7 @@ phoman = {
     't' : 'T',
     'ʌ' : '^',
     'ə' : 'C',
-    'ʊ' : 'C',
+    'ʊ' : 'U',
     'a' : 'A',
     
     'p' : 'P',
@@ -57,7 +57,7 @@ consonant = {
     'Z' : 'ㅈ',
     '3' : 'ㅈ',
     'F' : 'ㅍ',
-    'v' : 'ㅂ',
+    'V' : 'ㅂ',
     '&' : 'ㄷ',
     
     # 무성 파열음
@@ -84,6 +84,9 @@ consonant = {
     # 유음
     'L' : 'ㄹ',
     'R' : 'ㄹ',
+    
+    'H' : 'ㅎ'
+    
 }
 
 # 모음부
@@ -129,15 +132,52 @@ vowel = {
 
 # 포만코드 변환
 def get_phoman(text):
-    char_lst = []
+    text = []
     for char in list(text):    
         if char in phoman.keys():
-            char_lst.append(phoman[char])
+            text.append(phoman[char])
             
-    return char_lst
+    return text
 
 def get_hangul(text):
     hangul_lst = []
+
+    # 어말이나 자음 앞에서 'TS'는 '츠'로 변환
+    if ''.join(text[-2:]) == 'TS':
+        text[-2:] = ['ㅊ', 'ㅡ']
+        
+    # 그 외 TS 는 'ㅊ'으로 변환
+    elif 'TS' in ''.join(text):
+        idx = text.index("T")
+        text[idx : idx + 2] = 'ㅊ'
+
+    # 어말이나 자음 앞에서 'T#'은 '치'로 변환
+    if ''.join(text[-2:]) == 'T#':
+        text[-2:] = ['ㅊ', 'ㅣ']
+        
+    # 그 외 'T#'은 'ㅊ'으로 변환    
+    elif 'T#' in ''.join(text):
+        idx = text.index("T")
+        text[idx : idx + 2] = 'ㅊ'
+        
+    # 어말이나 자음 앞에서 'DZ'는 '즈'로 변환
+    if ''.join(text[-2:]) == 'DZ':
+        text[-2:] = ['ㅈ', 'ㅡ']
+        
+    # 그 외 'DZ'는 'ㅈ'으로 변환    
+    elif 'DZ' in ''.join(text):
+        idx = text.index("D")
+        text[idx : idx + 2] = 'ㅈ'
+        
+    # 어말이나 자음 앞에서 'D3'은 '지'로 변환
+    if ''.join(text[-2:]) == 'D3':
+        text[-2:] = ['ㅈ', 'ㅣ']
+        
+    # 그 외 'D3'은 'ㅈ'으로 변환    
+    elif 'D3' in ''.join(text):
+        idx = text.index("D")
+        text[idx : idx + 2] = 'ㅈ'
+    
 
     for pro in get_phoman(text):
         
