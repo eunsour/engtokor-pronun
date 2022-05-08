@@ -48,7 +48,6 @@ phoman = {
 }
 
 # 자음부
-
 consonant = {
     # 마찰음
     'S' : 'ㅅ',
@@ -66,11 +65,8 @@ consonant = {
     'K' : 'ㅋ',
     
     # 파찰음
-    'TS' : 'ㅊ',
     'T#' : 'ㅊ',
-    'D3' : 'ㅈ',
-    'DZ' : 'ㅈ',
-    
+
     # 비음 
     'M' : 'ㅁ',
     'N' : 'ㄴ',
@@ -86,11 +82,9 @@ consonant = {
     'R' : 'ㄹ',
     
     'H' : 'ㅎ'
-    
 }
 
 # 모음부
-
 vowel = {
     # 단모음 
     '!' : 'ㅣ',
@@ -106,6 +100,15 @@ vowel = {
     # 이중모음
     '@' : 'ㅐ',
     'Q' : 'ㅚ',
+}
+
+double = {
+     # 파찰음
+    'TS' : 'ㅊ',
+    'D3' : 'ㅈ',
+    'DZ' : 'ㅈ',
+
+    # 이중모음
     'OU' : 'ㅗ',
     'AUC' : 'ㅏ워',
     'UC' : 'ㅝ',
@@ -128,19 +131,23 @@ vowel = {
     'JU' : 'ㅠ',
     'JO' : 'ㅛ',
     'J@' : 'ㅒ',
+    
 }
 
 # 포만코드 변환
 def get_phoman(text):
-    text = []
-    for char in list(text):    
+    phoman_lst = []
+
+    for char in list(text):
         if char in phoman.keys():
-            text.append(phoman[char])
-            
-    return text
+            phoman_lst.append(phoman[char])
+    return phoman_lst
 
 def get_hangul(text):
     hangul_lst = []
+
+    text = get_phoman(text)
+    print(text)
 
     # 어말이나 자음 앞에서 'TS'는 '츠'로 변환
     if ''.join(text[-2:]) == 'TS':
@@ -177,21 +184,88 @@ def get_hangul(text):
     elif 'D3' in ''.join(text):
         idx = text.index("D")
         text[idx : idx + 2] = 'ㅈ'
-    
 
-    for pro in get_phoman(text):
+    rep_word = ''.join(text)
+    
+    for con, vow in double.items():
+
+        if con in rep_word:
+
+            rep_word = rep_word.replace(con, vow)
+
+    print(f'\n이중 모음 제거 : {rep_word}')
+    
+    for pro in list(rep_word):
         
-        # 자음부 
+        # 자음부
         if pro in consonant.keys():
+
+            try:
+                # 같은 자음 연속되면 삭제
+                if consonant[pro] == hangul_lst[-1]:
+                    hangul_lst.pop()
+
+                # 2. 자음 앞에서는 '저'로 표기한다.
+    #             if hangul_lst[-1] == 'ㅈ':
+    #                 hangul_lst.append('ㅓ')
+
+                # 자음 앞에서는 중성 모음 'ㅡ'를 추가한다.
+    #             if hangul_lst[-1] in consonant.values():
+    #                 hangul_lst.append('ㅡ')
+                
+                if hangul_lst[-1] == "ㅅ" and pro == "N":
+                    hangul_lst.append("ㅕ")
+                    
+                # 6-2. 모음이 따르지 않는 비음 앞에 올 때는 "ㄹㄹ"로 변환
+                if hangul_lst[-1] == "ㄹ" and pro in ["M", "N", "Q"]:
+                    hangul_lst.append("ㄹ")
+                    hangul_lst.append("ㅡ")
+                    
+            except:
+                pass
+
             hangul_lst.append(consonant[pro])
             
+
         # 모음부
-        if pro in vowel.keys():
+        elif pro in vowel.keys():
+
+            # 단어의 시작이거나, 종성 'ㅇ' 일 때 초성 'ㅇ'을 삽입
+            if len(hangul_lst) == 0:
+                hangul_lst.append('ㅇ')
+
+            
+            try:
+                # 같은 모음 연속되면 삭제
+                if vowel[pro] == hangul_lst[-1]:
+                    hangul_lst.pop()
+                    
+                # 모음의 뒤에서는 초성 'ㅇ'을 삽입
+                if hangul_lst[-1] in vowel.values():
+                    hangul_lst.append('ㅇ')
+                
+                # 6-2. 어중의 'L'이 모음 앞에 올 때 "ㄹㄹ"로 변환
+                if hangul_lst[-1] == "ㄹ":
+                    hangul_lst.append("ㄹ")
+                    
+                '''
+                    'M' : 'ㅁ',
+                    'N' : 'ㄴ',
+                    'Q' : 'ㅇ', 
+                '''
+
+
+            except:
+                pass
+
             hangul_lst.append(vowel[pro])
 
+        else:
+            hangul_lst.append(pro)
+        
     return hangul_lst
 
 if __name__ == "__main__":
     text = 'ɔɪl'
 
-    print(get_hangul(text=text))
+    print(get_hangul(text))
