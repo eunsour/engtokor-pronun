@@ -229,12 +229,11 @@ def get_hangul(phomanCode: list):
     if ''.join(phomanCode[-1:]) == '#':
         phomanCode[-1:] = ['ㅣ']
 
-    # if ''.join(phomanCode[-1:]) in consonant.keys():
-    #     phomanCode.append('ㅡ')
+    if ''.join(phomanCode[-1:]) in consonant.keys():
+        phomanCode.append('ㅡ')
 
 
-
-
+    ####################################################################################
 
     # print(phomanCode)
     # monophthong = ['!', 'I', '^', 'C', 'c', 'E', 'A', 'U', 'O']
@@ -264,7 +263,7 @@ def get_hangul(phomanCode: list):
     for pro in list(rep_word):
         
         previous_word.append(pro)
-        print(pro)
+
         # 자음부
         if pro in consonant.keys():
 
