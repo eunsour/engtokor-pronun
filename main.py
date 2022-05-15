@@ -134,6 +134,35 @@ double = {
     
 }
 
+
+def slicing(word):
+    CHOSUNG_LIST = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ',
+                    'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ',
+                    'ㅎ']
+
+    JUNGSUNG_LIST = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ',
+                     'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ',
+                     'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ']
+
+    JONGSUNG_LIST = ['*', 'ㄱ*', 'ㄲ*', 'ㄳ*', 'ㄴ*', 'ㄵ*', 'ㄶ*', 'ㄷ*',
+                     'ㄹ*', 'ㄺ*', 'ㄻ*', 'ㄼ*', 'ㄽ*', 'ㄾ*', 'ㄿ*', 'ㅀ*',
+                     'ㅁ*', 'ㅂ*', 'ㅄ*', 'ㅅ*', 'ㅆ*', 'ㅇ*', 'ㅈ*', 'ㅊ*',
+                     'ㅋ*', 'ㅌ*', 'ㅍ*', 'ㅎ*']
+
+    char_list = []
+    for char in list(word.strip()):
+        if '가'<= char <='힣':
+            ch1 = (ord(char) - ord('가'))//588
+            ch2 = ((ord(char) - ord('가')) - (588*ch1)) // 28
+            ch3 = (ord(char) - ord('가')) - (588*ch1) - 28 * ch2
+            char_list.append(CHOSUNG_LIST[ch1])
+            char_list.append(JUNGSUNG_LIST[ch2])
+            char_list.append(JONGSUNG_LIST[ch3])
+        else:
+            char_list.append([char])
+    return char_list
+
+
 # 포만코드 변환
 def get_phomanCode(word):
     phoman_lst = []
