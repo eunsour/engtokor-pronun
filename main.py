@@ -1,167 +1,159 @@
-# 포만코드 대조표
+from join_jamos import join_jamos, split_syllable_char, split_syllables
 
+# 포만코드 대조표
 phoman = {
-#     'ː' : ':',
-    'n' : 'N',
-    'b' : 'B',
-    'z' : 'Z',
-    'ɡ' : 'G',
-    
-    't' : 'T',
-    'ʌ' : '^',
-    'ə' : 'C',
-    'ʊ' : 'U',
-    'a' : 'A',
-    
-    'p' : 'P',
-    'r' : 'R',
-    'u' : 'U',
-    'ŋ' : 'Q',  # 종성 'ㅇ'
-    'h' : 'H',
-    
-    'v' : 'V',
-    'ɑ' : 'A',
-    'i' : '!',
-    'ʒ' : '3',
-    'x' : 'X',
-    
-    'ɔ' : 'O',
-    'æ' : '@',
-    'd' : 'D',
-    'l' : 'L',
-    'ʃ' : '#',
-    
-    'ð' : '&',
-    'j' : 'J',
-    'ɜ' : 'C',
-    'w' : 'W',
-    'f' : 'F',
-    
-    'k' : 'K',
-    's' : 'S',
-    'θ' : '*',
-    'm' : 'M',
-    'e' : 'E',
-    
-    'ɪ' : '!',
-    'ɒ' : 'O'
+    #     'ː' : ':',
+    "n": "N",
+    "b": "B",
+    "z": "Z",
+    "ɡ": "G",
+    "t": "T",
+    "ʌ": "^",
+    "ə": "C",
+    "ʊ": "U",
+    "a": "A",
+    "p": "P",
+    "r": "R",
+    "u": "U",
+    "ŋ": "Q",  # 종성 'ㅇ'
+    "h": "H",
+    "v": "V",
+    "ɑ": "A",
+    "i": "!",
+    "ʒ": "3",
+    "x": "X",
+    "ɔ": "O",
+    "æ": "@",
+    "d": "D",
+    "l": "L",
+    "ʃ": "#",
+    "ð": "&",
+    "j": "J",
+    "ɜ": "C",
+    "w": "W",
+    "f": "F",
+    "k": "K",
+    "s": "S",
+    "θ": "*",
+    "m": "M",
+    "e": "E",
+    "ɪ": "!",
+    "ɒ": "O",
 }
 
 # 자음부
 consonant = {
     # 마찰음
-    'S' : 'ㅅ',
-    '*' : 'ㅅ',
-    '#' : 'ㅅ',
-    'Z' : 'ㅈ',
-    '3' : 'ㅈ',
-    'F' : 'ㅍ',
-    'V' : 'ㅂ',
-    '&' : 'ㄷ',
-    
+    "S": "ㅅ",
+    "*": "ㅅ",
+    "#": "ㅅ",
+    "Z": "ㅈ",
+    "3": "ㅈ",
+    "F": "ㅍ",
+    "V": "ㅂ",
+    "&": "ㄷ",
     # 무성 파열음
-    'P' : 'ㅍ',
-    'T' : 'ㅌ',
-    'K' : 'ㅋ',
-    
+    "P": "ㅍ",
+    "T": "ㅌ",
+    "K": "ㅋ",
     # 파찰음
-    'T#' : 'ㅊ',
-
-    # 비음 
-    'M' : 'ㅁ',
-    'N' : 'ㄴ',
-    'Q' : 'ㅇ', # 종성 'ㅇ'
-    
+    "T#": "ㅊ",
+    "TS": "ㅊ",
+    "D3": "ㅈ",
+    "DZ": "ㅈ",
+    # 비음
+    "M": "ㅁ",
+    "N": "ㄴ",
+    "Q": "ㅇ",  # 종성 'ㅇ'
     # 유성 파열음
-    'B' : 'ㅂ',
-    'D' : 'ㄷ',
-    'G' : 'ㄱ',
-    
+    "B": "ㅂ",
+    "D": "ㄷ",
+    "G": "ㄱ",
     # 유음
-    'L' : 'ㄹ',
-    'R' : 'ㄹ',
-    
-    'H' : 'ㅎ'
+    "L": "ㄹ",
+    "R": "ㄹ",
+    "H": "ㅎ",
+    "-": "-",
 }
 
 # 모음부
 vowel = {
-    # 단모음 
-    '!' : 'ㅣ',
-    'I' : 'ㅣ',
-    '^' : 'ㅓ',
-    'C' : 'ㅓ',
-    'c' : 'ㅓ',
-    'E' : 'ㅔ',
-    'A' : 'ㅏ',
-    'U' : 'ㅜ',
-    'O' : 'ㅗ',
-    
+    # 단모음
+    "!": "ㅣ",
+    "I": "ㅣ",
+    "^": "ㅓ",
+    "C": "ㅓ",
+    "c": "ㅓ",
+    "E": "ㅔ",
+    "A": "ㅏ",
+    "U": "ㅜ",
+    "O": "ㅗ",
     # 이중모음
-    '@' : 'ㅐ',
-    'Q' : 'ㅚ',
+    "@": "ㅐ",
+    "Q": "ㅚ",
+    "OU": "ㅗ",
+    "AUC": "ㅏ워",
+    "UC": "ㅝ",
+    # 반모음
+    "W!": "ㅟ",
+    "W^": "ㅝ",
+    "WC": "ㅝ",
+    "WE": "ㅞ",
+    "WA": "ㅘ",
+    "WU": "ㅜ",
+    "WO": "ㅝ",
+    "WOU": "ㅝ",
+    "W@": "ㅙ",
+    "J!": "ㅣ",
+    "J^": "ㅕ",
+    "JC": "ㅕ",
+    "JE": "ㅖ",
+    "JA": "ㅑ",
+    "JU": "ㅠ",
+    "JO": "ㅛ",
+    "J@": "ㅒ",
 }
 
 double = {
-     # 파찰음
-    'TS' : 'ㅊ',
-    'D3' : 'ㅈ',
-    'DZ' : 'ㅈ',
-
+    # 파찰음
+    "TS": "ㅊ",
+    "D3": "ㅈ",
+    "DZ": "ㅈ",
     # 이중모음
-    'OU' : 'ㅗ',
-    'AUC' : 'ㅏ워',
-    'UC' : 'ㅝ',
-    
+    "OU": "ㅗ",
+    "AUC": "ㅏ워",
+    "UC": "ㅝ",
     # 반모음
-    'W!' : 'ㅟ',
-    'W^' : 'ㅝ',
-    'WC' : 'ㅝ',
-    'WE' : 'ㅞ',
-    'WA' : 'ㅘ',
-    'WU' : 'ㅜ',
-    'WO' : 'ㅝ',
-    'WOU' : 'ㅝ',
-    'W@' : 'ㅙ',
-    'J!' : 'ㅣ',
-    'J^' : 'ㅕ',
-    'JC' : 'ㅕ',
-    'JE' : 'ㅖ',
-    'JA' : 'ㅑ',
-    'JU' : 'ㅠ',
-    'JO' : 'ㅛ',
-    'J@' : 'ㅒ',
-    
+    "W!": "ㅟ",
+    "W^": "ㅝ",
+    "WC": "ㅝ",
+    "WE": "ㅞ",
+    "WA": "ㅘ",
+    "WU": "ㅜ",
+    "WO": "ㅝ",
+    "WOU": "ㅝ",
+    "W@": "ㅙ",
+    "J!": "ㅣ",
+    "J^": "ㅕ",
+    "JC": "ㅕ",
+    "JE": "ㅖ",
+    "JA": "ㅑ",
+    "JU": "ㅠ",
+    "JO": "ㅛ",
+    "J@": "ㅒ",
 }
 
+monophthong = ["!", "I", "^", "C", "c", "E", "A", "U", "O"]
 
-def slicing(word):
-    CHOSUNG_LIST = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ',
-                    'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ',
-                    'ㅎ']
+__HANGUL_CHOSEONG_FILLER_v__ = int('115F', 16)   # 'ᅟ'  (화면에 안 보임)
+__HANGUL_CHOSEONG_FILLER__ =  'ᅟ' # 0x115F # (화면에 안 보임)
+__HANGUL_JUNGSEONG_FILLER_v__ = int('1160', 16) # 'ᅠ' (화면에 안 보임)
+__HANGUL_JUNGSEONG_FILLER__ = 'ᅠ' # 0x1160 # (화면에 안 보임)
 
-    JUNGSUNG_LIST = ['ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ',
-                     'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ',
-                     'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ']
-
-    JONGSUNG_LIST = ['*', 'ㄱ*', 'ㄲ*', 'ㄳ*', 'ㄴ*', 'ㄵ*', 'ㄶ*', 'ㄷ*',
-                     'ㄹ*', 'ㄺ*', 'ㄻ*', 'ㄼ*', 'ㄽ*', 'ㄾ*', 'ㄿ*', 'ㅀ*',
-                     'ㅁ*', 'ㅂ*', 'ㅄ*', 'ㅅ*', 'ㅆ*', 'ㅇ*', 'ㅈ*', 'ㅊ*',
-                     'ㅋ*', 'ㅌ*', 'ㅍ*', 'ㅎ*']
-
-    char_list = []
-    for char in list(word.strip()):
-        if '가'<= char <='힣':
-            ch1 = (ord(char) - ord('가'))//588
-            ch2 = ((ord(char) - ord('가')) - (588*ch1)) // 28
-            ch3 = (ord(char) - ord('가')) - (588*ch1) - 28 * ch2
-            char_list.append(CHOSUNG_LIST[ch1])
-            char_list.append(JUNGSUNG_LIST[ch2])
-            char_list.append(JONGSUNG_LIST[ch3])
-        else:
-            char_list.append([char])
-    return char_list
-
+__초성_채움__ = __HANGUL_CHOSEONG_FILLER__
+__중성_채움__ = __HANGUL_JUNGSEONG_FILLER__
+초성_채움 = __초성_채움__
+중성_채움 = __중성_채움__
 
 # 포만코드 변환
 def get_phomanCode(word):
@@ -181,10 +173,12 @@ def get_hangul(phomanCode: list):
     print(f"Phoman Code : {phomanCode}\n")
 
     ####################################################################################
-
+    print("".join(phomanCode[-1]))
     # 예외 1. 'R'의 경우 어말이나 자음 앞에서는 무시(묵음 처리)한다.
-    if "".join(phomanCode[-1:]) == "R":
-        phomanCode.pop()
+    # 무시 (묵음 처리)는 없애는 것이 아닌 듯
+    if "".join(phomanCode[-1]) == "R":
+        # phomanCode.pop()
+        phomanCode[-1] = 중성_채움
 
     elif "R" in "".join(phomanCode):
         # print(phomanCode)
@@ -268,9 +262,13 @@ def get_hangul(phomanCode: list):
     if "".join(phomanCode[-1:]) == "#":
         phomanCode[-1:] = ["ㅣ"]
 
+    # print("".join(phomanCode[0]))
+    # if "".join(phomanCode[0]) in vowel.keys:
+    #     phomanCode.insert(0, 'ㅇ')
+
     # 자음 처리부 : 어말이나 자음 앞에서는 중성 모음 'ㅡ'를 추가한다.
-    if "".join(phomanCode[-1:]) in consonant.keys():
-        phomanCode.append("ㅡ")
+    # if "".join(phomanCode[-1:]) in consonant.keys():
+    #     phomanCode.append("ㅡ")
 
     ####################################################################################
 
@@ -288,18 +286,18 @@ def get_hangul(phomanCode: list):
 
     for pro in list(rep_word):
 
-        previous_word.append(pro)
-
         # 자음부
         if pro in consonant.keys():
 
             try:
+                # print(previous_word[-1])
+                # print(f'pro : {pro}')
                 # 0. 같은 자음 연속되면 삭제
                 if consonant[pro] == hangul_lst[-1]:
                     hangul_lst.pop()
 
                 # 2. 자음 앞에서는 '저'로 표기한다.
-                if previous_word[-2] == "3":
+                if previous_word[-1] == "3":
                     hangul_lst.append("ㅓ")
 
                 # 모음 처리부 : 종성 'ㅇ'의 뒤에서는 초성 'ㅇ'을 삽입한다.
@@ -310,29 +308,19 @@ def get_hangul(phomanCode: list):
                 if hangul_lst[-1] in consonant.values():
                     hangul_lst.append("ㅡ")
 
-                # 6-2. 모음이 따르지 않는 비음 앞에 올 때는 "ㄹㄹ"로 변환
-                if previous_word in ["M", "N", "Q"]:
+                # 6-2. 'L' 이 모음이 따르지 않는 비음 앞에 올 때는 "ㄹㄹ"로 변환
+                if previous_word[-1] in ["M", "N", "Q"] and pro == "L":
                     hangul_lst.append("ㄹ")
-                    hangul_lst.append("ㅡ")
+                    # hangul_lst.append("ㅡ")
 
                 # 7. 단모음 다음의 어말 무성 파열음 ['P', 'T', 'K'] 은 각각 종성 ['ㅂ', 'ㅅ', 'ㄱ'] 으로 표기한다.
-                if (
-                    previous_word[-2] in ["!", "I", "^", "C", "c", "E", "A", "U", "O"]
-                    and pro == "P"
-                ):
-                    consonant[pro] = "ㅂ"
-
-                if (
-                    previous_word[-2] in ["!", "I", "^", "C", "c", "E", "A", "U", "O"]
-                    and pro == "T"
-                ):
-                    consonant[pro] = "ㅅ"
-
-                if (
-                    previous_word[-2] in ["!", "I", "^", "C", "c", "E", "A", "U", "O"]
-                    and pro == "K"
-                ):
-                    consonant[pro] = "ㄱ"
+                if previous_word[-1] in monophthong:
+                    if pro == "P":
+                        consonant[pro] = "ㅂ"
+                    if pro == "T":
+                        consonant[pro] = "ㅅ"
+                    if pro == "K":
+                        consonant[pro] = "ㄱ"
 
             except:
                 pass
@@ -373,27 +361,39 @@ def get_hangul(phomanCode: list):
         else:
             hangul_lst.append(pro)
 
+        # print(pro)
+        previous_word.append(pro)
     ####################################################################################
 
-    return hangul_lst
+    print(split_syllables(hangul_lst))
+    # return join_jamos(hangul_lst)
+
+    # for hangul in list(hangul_lst):
+    #     print(hangul)
+
 
 if __name__ == "__main__":
     # text = "ˈænəlɪst"
-    # text = 'it'
+    # text = "it"
+    # text = "ˈmɑːdərnɪzəm"
+    # text = "ˈwʌndərfl"
+    # text = "əˈraɪvl"
     # text = 'ˌaʊtˈdɔːrz'
     # text = "ˈhɑːlədeɪ"
     # text = "ˈtʃaɪnə"
     # text = 'stɑːrt'
     # text = "ˈpɑːrti"
     # text = "dʒɔɪn"
+    # text = "bi:t"
     # text = "ˈvɪʒn"
     # text = "laʊndʒ"
     # text = "ˈæʒər"
-    # text = "ˈriːdʒənt"
+    text = "ˈriːdʒənt"
     # text = "ˈnætʃrəl"
     # text = "rɪtʃ"
     # text = "ɪts"
     # text = "ˈskɑːrlət"
-    text = "ˈflaʊər"
+    # text = "ˈflaʊər"
+    # text = "əˈraɪvl"
 
-    print(get_hangul(text))
+    print(f"hangul : {get_hangul(text)}")
