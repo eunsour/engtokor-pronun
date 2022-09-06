@@ -1,20 +1,8 @@
-from join_jamos import join_jamos, split_syllable_char, split_syllables
-from utils import *
+from utils.jamo import join_jamos, split_syllable_char, split_syllables
+from utils.phoman_code import *
 
-monophthong = ["!", "I", "^", "C", "c", "E", "A", "U", "O"]
 
-__HANGUL_CHOSEONG_FILLER_v__ = int('115F', 16)   # 'ᅟ'  (화면에 안 보임)
-__HANGUL_CHOSEONG_FILLER__ =  'ᅟ' # 0x115F # (화면에 안 보임)
-__HANGUL_JUNGSEONG_FILLER_v__ = int('1160', 16) # 'ᅠ' (화면에 안 보임)
-__HANGUL_JUNGSEONG_FILLER__ = 'ᅠ' # 0x1160 # (화면에 안 보임)
-
-__초성_채움__ = __HANGUL_CHOSEONG_FILLER__
-__중성_채움__ = __HANGUL_JUNGSEONG_FILLER__
-초성_채움 = __초성_채움__
-중성_채움 = __중성_채움__
-
-# 포만코드 변환
-def get_phomanCode(word):
+def get_phomanCode(word: str):
     phoman_lst = []
 
     for char in list(word):
@@ -24,81 +12,45 @@ def get_phomanCode(word):
     return phoman_lst
 
 
-def get_hangul(phomanCode: list):
 
-    hangul_lst, previous_word = [], []
-    phomanCode = get_phomanCode(phomanCode)
-    print(f"Phoman Code : {phomanCode}\n")
+def get_hangul(input_text: str):
+    hangul_lst = []
+    input_text = input_text.replace("ˌ", "").replace("ˈ", "")
+    phomanCode = ''.join(get_phomanCode(input_text))
 
-    ####################################################################################
-    print("".join(phomanCode[-1]))
-    # 예외 1. 'R'의 경우 어말이나 자음 앞에서는 무시(묵음 처리)한다.
-    # 무시 (묵음 처리)는 없애는 것이 아닌 듯
-    if "".join(phomanCode[-1]) == "R":
-        # phomanCode.pop()
-        phomanCode[-1] = 중성_채움
+    print(f"포만 코드 : {phomanCode}, {type(phomanCode)}\n")
 
-    elif "R" in "".join(phomanCode):
-        # print(phomanCode)
-        idx = phomanCode.index("R")
-        if phomanCode[idx + 1] in consonant.keys():
-            del phomanCode[idx]
+#############################################################################
 
     # 어말이나 자음 앞에서 'TS'는 '츠'로 변환
-    if "".join(phomanCode[-2:]) == "TS":
-        phomanCode[-2:] = ["ㅊ", "ㅡ"]
+    if phomanCode[-2:] == "TS":
+        phomanCode = phomanCode.replace(phomanCode[-2:], "츠")
 
-    # 그 외 TS 는 'ㅊ'으로 변환
-    elif "TS" in "".join(phomanCode):
-        idx = phomanCode.index("T")
-        phomanCode[idx : idx + 2] = "ㅊ"
 
     # 어말이나 자음 앞에서 'T#'은 '치'로 변환
-    if "".join(phomanCode[-2:]) == "T#":
-        phomanCode[-2:] = ["ㅊ", "ㅣ"]
+    if phomanCode[-2:] == "T#":
+        phomanCode = phomanCode.replace(phomanCode[-2:], "치")
+
 
     # 어말이나 자음 앞에서 'DZ'는 '즈'로 변환
-    if "".join(phomanCode[-2:]) == "DZ":
-        phomanCode[-2:] = ["ㅈ", "ㅡ"]
-
-    # 그 외 'DZ'는 'ㅈ'으로 변환
-    elif "DZ" in "".join(phomanCode):
-        idx = phomanCode.index("D")
-        phomanCode[idx : idx + 2] = "ㅈ"
+    if phomanCode[-2:] == "DZ":
+        phomanCode = phomanCode.replace(phomanCode[-2:], "즈")
 
     # 어말이나 자음 앞에서 'D3'은 '지'로 변환
-    if "".join(phomanCode[-2:]) == "D3":
-        phomanCode[-2:] = ["ㅈ", "ㅣ"]
+    if phomanCode[-2:] == "D3":
+        phomanCode = phomanCode.replace(phomanCode[-2:], "지")
 
-    # 그 외 'D3'은 'ㅈ'으로 변환
-    elif "D3" in "".join(phomanCode):
-        idx = phomanCode.index("D")
-        phomanCode[idx : idx + 2] = "ㅈ"
+#############################################################################
 
-    # 'ㅊ' 변환
-    if "T#" in "".join(phomanCode):
-        idx = phomanCode.index("T")
-
-        if phomanCode[idx + 2] == "!":
-            phomanCode[idx : idx + 3] = "ㅊㅑ"
-        elif phomanCode[idx + 2] == "^":
-            phomanCode[idx : idx + 3] = "ㅊㅕ"
-        elif phomanCode[idx + 2] == "E":
-            phomanCode[idx : idx + 3] = "ㅊㅔ"
-        elif phomanCode[idx + 2] == "A":
-            phomanCode[idx : idx + 3] = "ㅊㅑ"
-        elif phomanCode[idx + 2] == "U":
-            phomanCode[idx : idx + 3] = "ㅊㅠ"
-        elif phomanCode[idx + 2] == "O":
-            phomanCode[idx : idx + 3] = "ㅊㅛ"
-        elif phomanCode[idx + 2] == "@":
-            phomanCode[idx : idx + 3] = "ㅊㅒ"
-        elif phomanCode[idx + 2] in consonant.keys():
-            phomanCode[idx : idx + 2] = "ㅊㅠ"
+    if phomanCode[-1:] == "#":
+        phomanCode = phomanCode.replace(phomanCode[-1:], "ㅣ")
+        # phomanCode[-1:] = ["ㅣ"]
 
     # 'ㅅ' 변환
-    if "#" in "".join(phomanCode):
+    elif "#" in "".join(phomanCode):
         idx = phomanCode.index("#")
+
+        change_to = {'#!': '샤','#^': '셔','#E':'세', '#A': '샤', '#U': '슈', '#O': '쇼', '#@': '섀'}
 
         if phomanCode[idx + 1] == "!":
             phomanCode[idx + 1] = "ㅑ"
@@ -108,6 +60,7 @@ def get_hangul(phomanCode: list):
             phomanCode[idx + 1] = "ㅔ"
         elif phomanCode[idx + 1] == "A":
             phomanCode[idx + 1] = "ㅑ"
+
         elif phomanCode[idx + 1] == "U":
             phomanCode[idx + 1] = "ㅠ"
         elif phomanCode[idx + 1] == "O":
@@ -117,141 +70,33 @@ def get_hangul(phomanCode: list):
         elif phomanCode[idx + 1] in consonant.keys():
             phomanCode[idx + 1] = "ㅠ"
 
-    if "".join(phomanCode[-1:]) == "#":
-        phomanCode[-1:] = ["ㅣ"]
 
-    # print("".join(phomanCode[0]))
-    # if "".join(phomanCode[0]) in vowel.keys:
-    #     phomanCode.insert(0, 'ㅇ')
 
-    # 자음 처리부 : 어말이나 자음 앞에서는 중성 모음 'ㅡ'를 추가한다.
-    # if "".join(phomanCode[-1:]) in consonant.keys():
-    #     phomanCode.append("ㅡ")
 
-    ####################################################################################
+#############################################################################
 
-    rep_word = "".join(phomanCode)
-
-    for con, vow in double.items():
-
-        if con in rep_word:
-
-            rep_word = rep_word.replace(con, vow)
-
-    print(f"이중 모음 제거 : {rep_word}\n")
-
-    ####################################################################################
-
-    for pro in list(rep_word):
+    for chr in phomanCode:
 
         # 자음부
-        if pro in consonant.keys():
-
-            try:
-                # print(previous_word[-1])
-                # print(f'pro : {pro}')
-                # 0. 같은 자음 연속되면 삭제
-                if consonant[pro] == hangul_lst[-1]:
-                    hangul_lst.pop()
-
-                # 2. 자음 앞에서는 '저'로 표기한다.
-                if previous_word[-1] == "3":
-                    hangul_lst.append("ㅓ")
-
-                # 모음 처리부 : 종성 'ㅇ'의 뒤에서는 초성 'ㅇ'을 삽입한다.
-                if previous_word[-1] == "Q":
-                    hangul_lst.append("ㅇ")
-
-                # 자음 처리부 : 자음 앞에서는 중성 모음 'ㅡ'를 추가한다.
-                if hangul_lst[-1] in consonant.values():
-                    hangul_lst.append("ㅡ")
-
-                # 6-2. 'L' 이 모음이 따르지 않는 비음 앞에 올 때는 "ㄹㄹ"로 변환
-                if previous_word[-1] in ["M", "N", "Q"] and pro == "L":
-                    hangul_lst.append("ㄹ")
-                    # hangul_lst.append("ㅡ")
-
-                # 7. 단모음 다음의 어말 무성 파열음 ['P', 'T', 'K'] 은 각각 종성 ['ㅂ', 'ㅅ', 'ㄱ'] 으로 표기한다.
-                if previous_word[-1] in monophthong:
-                    if pro == "P":
-                        consonant[pro] = "ㅂ"
-                    if pro == "T":
-                        consonant[pro] = "ㅅ"
-                    if pro == "K":
-                        consonant[pro] = "ㄱ"
-
-            except:
-                pass
-
-            hangul_lst.append(consonant[pro])
+        if chr in consonant.keys():
+            hangul_lst.append(consonant[chr])
 
         # 모음부
-        elif pro in vowel.keys():
-
-            # 모음 처리부 : 단어의 시작일 때 초성 'ㅇ'을 삽입
-            if len(hangul_lst) == 0:
-                hangul_lst.append("ㅇ")
-
-            try:
-                # 0. 같은 모음 연속되면 삭제
-                if vowel[pro] == hangul_lst[-1]:
-                    hangul_lst.pop()
-
-                # 모음 처리부 : 모음의 뒤에서는 초성 'ㅇ'을 삽입
-                if hangul_lst[-1] in vowel.values():
-                    hangul_lst.append("ㅇ")
-
-                # 6-2. 어중의 'L'이 모음 앞에 올 때 "ㄹㄹ"로 변환
-                if len(hangul_lst) > 1 and previous_word[-2] == "L":
-                    hangul_lst.append("ㄹ")
-
-                """
-                    'M' : 'ㅁ',
-                    'N' : 'ㄴ',
-                    'Q' : 'ㅇ', 
-                """
-
-            except:
-                pass
-
-            hangul_lst.append(vowel[pro])
-
+        elif chr in vowel.keys():
+            hangul_lst.append(vowel[chr])
+        
         else:
-            hangul_lst.append(pro)
+            hangul_lst.append(chr)
 
-        # print(pro)
-        previous_word.append(pro)
-    ####################################################################################
 
-    print(split_syllables(hangul_lst))
-    # return join_jamos(hangul_lst)
+    return join_jamos(hangul_lst)
 
-    # for hangul in list(hangul_lst):
-    #     print(hangul)
-
+#############################################################################
 
 if __name__ == "__main__":
-    # text = "ˈænəlɪst"
-    # text = "it"
-    # text = "ˈmɑːdərnɪzəm"
-    # text = "ˈwʌndərfl"
-    # text = "əˈraɪvl"
-    # text = 'ˌaʊtˈdɔːrz'
-    # text = "ˈhɑːlədeɪ"
-    # text = "ˈtʃaɪnə"
-    # text = 'stɑːrt'
-    # text = "ˈpɑːrti"
-    # text = "dʒɔɪn"
-    # text = "bi:t"
-    # text = "ˈvɪʒn"
-    # text = "laʊndʒ"
-    # text = "ˈæʒər"
-    text = "ˈriːdʒənt"
-    # text = "ˈnætʃrəl"
-    # text = "rɪtʃ"
-    # text = "ɪts"
-    # text = "ˈskɑːrlət"
-    # text = "ˈflaʊər"
-    # text = "əˈraɪvl"
+    # text = "ˌedʒuˈkeɪʃn"
+    # text = "ˌfæts"
+    # text = "ˈbrɪtɪʃ"
+    text = "ʃiːld"
 
-    print(f"hangul : {get_hangul(text)}")
+    print(f"결과 : {get_hangul(text)}")
